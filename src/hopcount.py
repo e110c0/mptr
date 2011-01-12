@@ -28,8 +28,23 @@ def send_probes(ip, version, protocol, port = [53, 80,443], count = 5):
 def send_probes_ipv4(ip, protocol, port = [53, 80,443], count = 5):
 	print("send %s probes to %s via %s" % (count,ip,protocol))
 	result = {}
+	ptype = socket.getprotobyname(protocol)
+	try:
+     	my_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW, ptype)
+     except socket.error, (errno, msg):
+      if errno == 1:
+      # Operation not permitted
+            msg = msg + (
+                " - Note that ICMP messages can only be sent from processes"
+                " running as root."
+            )
+            raise socket.error(msg)
+        raise # raise the original error
 	if protocol == "icmp":
-		pass
+		for s in range(count):
+      		# get a socket
+      		sckt
+      		result[s] = send_probe_icmp_v4(sckt, ip, s)
 	else:
 		for p in port:
 			for s in range(count):
@@ -50,6 +65,16 @@ def send_probes_ipv4(ip, protocol, port = [53, 80,443], count = 5):
 def send_probes_ipv6(ip, protocol, port = [80,443], count = 5):
 	print("send %s probes to %s via %s" % (count,ip,protocol))
 	pass
+
+def send_probe_icmp_v4(sckt, ip, seq = 0):
+		
+		# get time
+		t1 = time()
+		# send a packet
+		# get reply
+		# get time
+		t2 = time()
+		return {'TTL':239, 'source':'123', 'RTT': t2-t1}
 
 def send_probe_udp_v4(ip, port = 53, seq = 0):
 		
